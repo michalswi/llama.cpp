@@ -181,6 +181,16 @@ setup_framework_structure() {
     cat > ${module_path}module.modulemap << EOF
 framework module llama {
     umbrella "Headers"
+    header "llama.h"
+    header "ggml.h"
+    header "ggml-alloc.h"
+    header "ggml-backend.h"
+    header "ggml-metal.h"
+    header "ggml-cpu.h"
+    header "ggml-blas.h"
+    header "gguf.h"
+    header "mtmd.h"
+    header "mtmd-helper.h"
 
     link "c++"
     link framework "Accelerate"
