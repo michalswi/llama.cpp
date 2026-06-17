@@ -97,7 +97,6 @@ NOTE: some models may require large context window, for example: `-c 8192`
 
 # Gemma 4
 (tool_name) -hf ggml-org/gemma-4-E2B-it-GGUF
-(tool_name) -hf ggml-org/gemma-4-E4B-it-GGUF
 (tool_name) -hf ggml-org/gemma-4-26B-A4B-it-GGUF
 (tool_name) -hf ggml-org/gemma-4-31B-it-GGUF
 ```
@@ -137,7 +136,6 @@ NOTE: some models may require large context window, for example: `-c 8192`
 # Gemma 4
 # Capabilities: audio input, vision input
 (tool_name) -hf ggml-org/gemma-4-E2B-it-GGUF
-(tool_name) -hf ggml-org/gemma-4-E4B-it-GGUF
 ```
 
 ## Finding more models:
