@@ -131,12 +131,23 @@ option(LLAMA_BUILD_COMMON "llama: build common utils library" ${LLAMA_STANDALONE
 # extra artifacts
 option(LLAMA_BUILD_TESTS     "llama: build tests"                                                                ${LLAMA_STANDALONE})
 option(LLAMA_BUILD_TOOLS     "llama: build tools"                                                                ${LLAMA_STANDALONE})
+option(LLAMA_BUILD_MTMD      "llama: build mtmd multimodal library (without CLI tools)"                            OFF)
 option(LLAMA_BUILD_EXAMPLES  "llama: build examples"                                                             ${LLAMA_STANDALONE})
 option(LLAMA_BUILD_SERVER    "llama: build server example"                                                       ${LLAMA_STANDALONE})
 option(LLAMA_BUILD_APP       "llama: build the unified binary"                                                   ${LLAMA_STANDALONE})
 option(LLAMA_BUILD_UI        "llama: build the embedded Web UI for server"                                       OFF)
 option(LLAMA_USE_PREBUILT_UI "llama: use prebuilt UI from HF Bucket when available" ON)
 option(LLAMA_CONNECT         "llama: include the llama-connect tool (downloads a prebuilt binary)"               OFF)
+
+# Backward compat: when old var is set but new one isn't, forward the value
+if(DEFINED LLAMA_BUILD_WEBUI)
+    set(LLAMA_BUILD_UI ${LLAMA_BUILD_WEBUI})
+    message(DEPRECATION "LLAMA_BUILD_WEBUI is deprecated, use LLAMA_BUILD_UI instead")
+endif()
+if(DEFINED LLAMA_USE_PREBUILT_WEBUI)
+    set(LLAMA_USE_PREBUILT_UI ${LLAMA_USE_PREBUILT_WEBUI})
+    message(DEPRECATION "LLAMA_USE_PREBUILT_WEBUI is deprecated, use LLAMA_USE_PREBUILT_UI instead")
+endif()
 
 option(LLAMA_TOOLS_INSTALL "llama: install tools" ${LLAMA_TOOLS_INSTALL_DEFAULT})
 option(LLAMA_TESTS_INSTALL "llama: install tests" ON)
@@ -256,21 +267,27 @@ if (LLAMA_BUILD_COMMON AND LLAMA_BUILD_TOOLS)
     add_subdirectory(tools)
 endif()
 
+if (LLAMA_BUILD_MTMD AND NOT (LLAMA_BUILD_COMMON AND LLAMA_BUILD_TOOLS))
+    # Build only the mtmd library (no CLI executables) without enabling all tools
+    add_subdirectory(tools/mtmd)
+endif()
+
 if (LLAMA_BUILD_APP)
     add_subdirectory(app)
 endif()
 
-# Standalone libmtmd build without pulling in the rest of the tools/ tree.
-# Useful when packaging just the mtmd library for language bindings (e.g. an
-# Apple XCFramework, or a WASM build). When the full tools build is enabled,
-# mtmd is already built by the tools/ subdirectory above; this hook only fires
-# when LLAMA_BUILD_TOOLS is OFF to avoid double-adding the target.
-option(LLAMA_BUILD_MTMD "llama: build tools/mtmd library standalone" OFF)
-if (LLAMA_BUILD_MTMD AND NOT (LLAMA_BUILD_COMMON AND LLAMA_BUILD_TOOLS))
-    add_subdirectory(tools/mtmd)
-endif()
+# Automatically add all files from the 'licenses' directory
+file(GLOB EXTRA_LICENSES "${CMAKE_SOURCE_DIR}/licenses/LICENSE-*")
 
-llama_apply_app_manifests()
+foreach(FILE_PATH ${EXTRA_LICENSES})
+    get_filename_component(FILE_NAME "${FILE_PATH}" NAME)
+    string(REGEX REPLACE "^LICENSE-" "" NAME "${FILE_NAME}")
+    license_add_file("${NAME}" "${FILE_PATH}")
+endforeach()
+
+if (LLAMA_BUILD_COMMON)
+    license_generate(llama-common)
+endif()
 
 #
 # install
