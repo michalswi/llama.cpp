@@ -36,18 +36,20 @@ build_spec() {
     case "$1" in
         ios-sim)      echo "build_ios_sim build-ios-sim Release-iphonesimulator ios true ${IOS_MIN_OS_VERSION}" ;;
         ios-device)   echo "build_ios_device build-ios-device Release-iphoneos ios false ${IOS_MIN_OS_VERSION}" ;;
-        macos)        echo "build_macos build-macos Release macos false ${MACOS_MIN_OS_VERSION}" ;;
-        visionos)     echo "build_visionos build-visionos Release-xros visionos false ${VISIONOS_MIN_OS_VERSION}" ;;
-        visionos-sim) echo "build_visionos_sim build-visionos-sim Release-xrsimulator visionos true ${VISIONOS_MIN_OS_VERSION}" ;;
-        tvos-sim)     echo "build_tvos_sim build-tvos-sim Release-appletvsimulator tvos true ${TVOS_MIN_OS_VERSION}" ;;
-        tvos-device)  echo "build_tvos_device build-tvos-device Release-appletvos tvos false ${TVOS_MIN_OS_VERSION}" ;;
+        macos)        echo "build_macos build-macos Release macos false ${MACOS_MIN_OS_VERSION}" ;; # NOTNEEDED
+        visionos)     echo "build_visionos build-visionos Release-xros visionos false ${VISIONOS_MIN_OS_VERSION}" ;; # NOTNEEDED
+        visionos-sim) echo "build_visionos_sim build-visionos-sim Release-xrsimulator visionos true ${VISIONOS_MIN_OS_VERSION}" ;; # NOTNEEDED
+        tvos-sim)     echo "build_tvos_sim build-tvos-sim Release-appletvsimulator tvos true ${TVOS_MIN_OS_VERSION}" ;; # NOTNEEDED
+        tvos-device)  echo "build_tvos_device build-tvos-device Release-appletvos tvos false ${TVOS_MIN_OS_VERSION}" ;; # NOTNEEDED
         *)            return 1 ;;
     esac
 }
 
 # Default: build everything
 if [[ $# -eq 0 ]]; then
-    BUILDS=(ios-sim ios-device macos visionos visionos-sim tvos-sim tvos-device)
+    BUILDS=(ios-sim ios-device)
+    # all NOT NEEDED for my app
+    # BUILDS=(ios-sim ios-device macos visionos visionos-sim tvos-sim tvos-device)
 else
     BUILDS=("$@")
 fi

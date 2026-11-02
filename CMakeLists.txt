@@ -276,20 +276,6 @@ if (LLAMA_BUILD_APP)
     add_subdirectory(app)
 endif()
 
-<<<<<<< HEAD
-# Standalone libmtmd build without pulling in the rest of the tools/ tree.
-# Useful when packaging just the mtmd library for language bindings (e.g. an
-# Apple XCFramework, or a WASM build). When the full tools build is enabled,
-# mtmd is already built by the tools/ subdirectory above; this hook only fires
-# when LLAMA_BUILD_TOOLS is OFF to avoid double-adding the target.
-option(LLAMA_BUILD_MTMD "llama: build tools/mtmd library standalone" OFF)
-if (LLAMA_BUILD_MTMD AND NOT (LLAMA_BUILD_COMMON AND LLAMA_BUILD_TOOLS))
-    add_subdirectory(tools/mtmd)
-endif()
-
-llama_apply_app_manifests()
-
-=======
 # Automatically add all files from the 'licenses' directory
 file(GLOB EXTRA_LICENSES "${CMAKE_SOURCE_DIR}/licenses/LICENSE-*")
 
@@ -303,7 +289,6 @@ if (LLAMA_BUILD_COMMON)
     license_generate(llama-common)
 endif()
 
->>>>>>> 47bfccbb9 (lamos init)
 #
 # install
 #
